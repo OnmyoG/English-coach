@@ -1,0 +1,6 @@
+openai-whisper
+sounddevice
+soundfile
+openai
+edge-tts
+pygame
