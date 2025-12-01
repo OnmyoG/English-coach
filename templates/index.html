@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>English Speaking Coach</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    #status { margin-bottom: 10px; font-weight: bold; }
+    #response span.wrong { background-color: #ffcdd2; border-radius: 4px; padding: 2px 4px; }
+  </style>
+</head>
+<body>
+  <button onclick="startApp()" id="startBtn">▶ Start Coaching</button>
+  <div id="app" style="display: none;">
+    <h2>English Speaking Coach</h2>
+    <p id="status">Initializing...</p>
+    <p><strong>Your speech:</strong></p>
+    <div id="transcript"></div>
+    <p><strong>AI Response:</strong></p>
+    <div id="response"></div>
+  </div>
+
+<script>
+  let mediaRecorder;
+  let chunks = [];
+  let silenceTimer;
+  const silenceDuration = 2000;
+
+  function startApp() {
+    document.getElementById("startBtn").style.display = "none";
+    document.getElementById("app").style.display = "block";
+    startRecordingLoop();
+  }
+
+  async function startRecordingLoop() {
+    document.getElementById("status").textContent = "Listening...";
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const audioCtx = new AudioContext();
+    const source = audioCtx.createMediaStreamSource(stream);
+    const analyser = audioCtx.createAnalyser();
+    source.connect(analyser);
+    const data = new Uint8Array(analyser.fftSize);
+
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.start();
+    chunks = [];
+
+    mediaRecorder.ondataavailable = e => chunks.push(e.data);
+    mediaRecorder.onstop = async () => {
+      document.getElementById("status").textContent = "Processing...";
+      const blob = new Blob(chunks, { type: "audio/wav" });
+      const formData = new FormData();
+      formData.append("audio", blob, "audio.wav");
+
+      const res = await fetch("/process_audio", { method: "POST", body: formData });
+      const data = await res.json();
+      document.getElementById("transcript").textContent = data.user;
+      renderCorrection(data.assistant);
+
+      const audio = new Audio(`/static/audio_reply.mp3?ts=${Date.now()}`);
+      audio.oncanplaythrough = () => {
+        audio.play().catch(err => {
+          console.error("Audio play error:", err);
+          alert("Audio playback failed. Please click the page or enable audio permission.");
+        });
+      };
+      audio.onerror = () => {
+        console.error("Audio file load error");
+      };
+      audio.onended = () => {
+        setTimeout(() => startRecordingLoop(), 1000);
+      };
+    };
+
+    detectSilence(analyser, data, () => {
+      mediaRecorder.stop();
+      stream.getTracks().forEach(t => t.stop());
+      audioCtx.close();
+    });
+  }
+
+  function detectSilence(analyser, dataArray, onSilence) {
+    clearInterval(silenceTimer);
+    let silentFor = 0;
+    silenceTimer = setInterval(() => {
+      analyser.getByteTimeDomainData(dataArray);
+      const max = Math.max(...dataArray);
+      const min = Math.min(...dataArray);
+      const amplitude = max - min;
+      if (amplitude < 10) {
+        silentFor += 200;
+        if (silentFor > silenceDuration) {
+          clearInterval(silenceTimer);
+          onSilence();
+        }
+      } else {
+        silentFor = 0;
+      }
+    }, 200);
+  }
+
+  function renderCorrection(reply) {
+    const match = reply.match(/wrong:(.*?)\s+right:(.*?)\b/i);
+    let html = reply;
+    if (match) {
+      html = reply.replace(match[1], `<span class="wrong">${match[1]}</span>`);
+    }
+    document.getElementById("response").innerHTML = html;
+    document.getElementById("status").textContent = "Waiting for next round...";
+  }
+</script>
+</body>
+</html>

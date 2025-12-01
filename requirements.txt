@@ -1,6 +1,9 @@
+flask
 openai-whisper
-sounddevice
-soundfile
-openai
 edge-tts
-pygame
+torch
+transformers
+openai
+numpy
+tqdm
+
