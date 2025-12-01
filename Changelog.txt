@@ -1,0 +1,19 @@
+v0.1 	
+- Building a project prototype
+
+v0.2 	
+- Add prompt words part, 
+- Add a config file, allowing for unified management of model configurations.
+
+v0.3
+- Supports automatic detection of user speech ending and initiation of processing (no button click required)
+
+- Fixed audio caching issue
+
+- Backend supports context memory
+
+- Added prompt word control to ensure dialogue conforms to C1 level
+
+- Added frontend (HTML webpage), now dialogue can be conducted without a terminal
+
+- Update README.txt

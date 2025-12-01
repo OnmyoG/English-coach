@@ -1,4 +1,0 @@
-0.1 	Building a project prototype
-
-0.2 	Add prompt words part, 
-	Add a config file, allowing for unified management of model 	configurations.
