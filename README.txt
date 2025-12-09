@@ -59,3 +59,10 @@ Directory Structure:
 - static/: Stores the generated audio file (audio_reply.mp3)
 
 - templates/: Web page HTML templates
+
+
+Group distribution for the project:
+- Songdi: 
+- Rachel:
+- Jan: 
+- Jolein: 
