@@ -1,5 +1,3 @@
-// static/activity.js
-
 function increaseActivity() {
   let count = parseInt(localStorage.getItem("exercises") || "0");
   count++;
