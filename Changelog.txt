@@ -17,3 +17,8 @@ v0.3
 - Added frontend (HTML webpage), now dialogue can be conducted without a terminal
 
 - Update README.txt
+
+v0.4
+- Updated the front end
+- Because Microsoft Edge-TTS has ceased service, it has been replaced by Google Gemini TTS.
+- Replace gpt-oss20b with qwen3 8b

@@ -1,9 +1,9 @@
 flask
 openai-whisper
-edge-tts
 torch
 transformers
 openai
 numpy
 tqdm
-
+requests
+google-genai
