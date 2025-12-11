@@ -152,13 +152,13 @@
   }
 
   // Show hero by default
-  document.getElementById('heroSection').style.display = 'flex';
+  document.getElementById('heroSection').style.display = 'block';
 
   // Navigation handlers
   document.getElementById('homeLink').addEventListener('click', function(e){
     e.preventDefault();
     hideAllSections();
-    document.getElementById('heroSection').style.display = 'flex';
+    document.getElementById('heroSection').style.display = 'block';
   });
 
   document.getElementById('aboutLink').addEventListener('click', function(e){
