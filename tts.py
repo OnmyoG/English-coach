@@ -2,7 +2,6 @@ import json
 import os
 import re
 import wave
-from google import genai
 import google.generativeai as genai
 from google.genai import types
 
