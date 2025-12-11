@@ -33,6 +33,7 @@ Usage:
 
 pip install -r requirements.txt
 
+
 2. Run the service in Terminal:
 
 python app.py

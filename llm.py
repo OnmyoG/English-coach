@@ -20,7 +20,7 @@ def generate_response(user_message: str) -> str:
     response = client.chat.completions.create(
         model=config["model"],
         messages=limited_history,
-        temperature=config.get("temperature", 0.6)
+        temperature=config.get("temperature", 0.7)
     )
 
     assistant_reply = response.choices[0].message.content.strip()
